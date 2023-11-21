@@ -4,6 +4,9 @@
 
 This repository serves as a best-practice example of implementing the Onion Vertical Architecture pattern in Golang. Onion Vertical Architecture is a design pattern that emphasizes modularity, scalability, and maintainability by organizing code into layers with distinct responsibilities.
 
+### Warning:
+* the repository is under developing.
+
 ## Getting Started
 
 1. **Clone the Repository:**
