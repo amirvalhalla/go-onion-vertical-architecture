@@ -12,29 +12,23 @@ type Controller interface {
 	Delete(ctx *gin.Context)
 }
 
-type controller struct {
-}
+type controller struct{}
 
 func NewController() Controller {
 	return &controller{}
 }
 
 func (c *controller) Get(ctx *gin.Context) {
-
 }
 
 func (c *controller) GetAll(ctx *gin.Context) {
-
 }
 
 func (c *controller) Create(ctx *gin.Context) {
-
 }
 
 func (c *controller) Update(ctx *gin.Context) {
-
 }
 
 func (c *controller) Delete(ctx *gin.Context) {
-
 }
