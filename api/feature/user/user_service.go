@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"github.com/amirvalhalla/go-onion-vertical-architecture/infrastructure/repository/sql"
 
 	user "github.com/amirvalhalla/go-onion-vertical-architecture/api/feature/user/dto"
 	"github.com/google/uuid"
@@ -15,10 +16,14 @@ type Service interface {
 	Delete(ctx context.Context)
 }
 
-type service struct{}
+type service struct {
+	uow sql.UnitOfWork
+}
 
-func NewService() Service {
-	return service{}
+func NewService(uow sql.UnitOfWork) Service {
+	return service{
+		uow: uow,
+	}
 }
 
 func (s service) Get(ctx context.Context, id uuid.UUID) {
