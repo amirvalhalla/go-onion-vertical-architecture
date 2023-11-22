@@ -23,6 +23,12 @@ func NewUser(firstName, lastName string) *User {
 	}
 }
 
+func (u *User) Update(firstName, lastName string, suspend bool) {
+	u.FirstName = firstName
+	u.LastName = lastName
+	u.Suspended = suspend
+}
+
 func (u *User) IsSuspended() bool {
 	return u.Suspended
 }
