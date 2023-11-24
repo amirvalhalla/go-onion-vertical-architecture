@@ -1,8 +1,8 @@
 package user
 
 import (
-	dto "github.com/amirvalhalla/go-onion-vertical-architecture/api/feature/user/dto"
 	"github.com/amirvalhalla/go-onion-vertical-architecture/domain"
+	dto "github.com/amirvalhalla/go-onion-vertical-architecture/feature/user/dto"
 )
 
 func ToGetDto(u domain.User) *dto.GetUserDto {
