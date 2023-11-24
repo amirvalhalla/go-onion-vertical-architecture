@@ -14,8 +14,8 @@ import (
 type Service interface {
 	Get(ctx context.Context, id uuid.UUID) (domain.User, error)
 	GetAll(ctx context.Context, pageIndex, pageSize int, search string) ([]domain.User, int64, error)
-	Create(ctx context.Context, createDto user2.CreateUserDto) (domain.User, error)
-	Update(ctx context.Context, updateDto user2.UpdateUserDto) (domain.User, error)
+	Create(ctx context.Context, createDto user2.CreateDto) (domain.User, error)
+	Update(ctx context.Context, updateDto user2.UpdateDto) (domain.User, error)
 	Delete(ctx context.Context, id uuid.UUID) error
 }
 
@@ -65,7 +65,7 @@ func (s service) GetAll(ctx context.Context, pageIndex, pageSize int, search str
 	return userEntities, totalRecords, err
 }
 
-func (s service) Create(ctx context.Context, createDto user2.CreateUserDto) (domain.User, error) {
+func (s service) Create(ctx context.Context, createDto user2.CreateDto) (domain.User, error) {
 	var err error
 	userEntity := domain.NewUser(createDto.FirstName, createDto.LastName)
 
@@ -80,7 +80,7 @@ func (s service) Create(ctx context.Context, createDto user2.CreateUserDto) (dom
 	return *userEntity, err
 }
 
-func (s service) Update(ctx context.Context, updateDto user2.UpdateUserDto) (domain.User, error) {
+func (s service) Update(ctx context.Context, updateDto user2.UpdateDto) (domain.User, error) {
 	var userEntity domain.User
 	updatedUserEntity := new(domain.User)
 	var err error

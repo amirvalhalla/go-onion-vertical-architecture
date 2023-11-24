@@ -16,11 +16,11 @@ const (
 )
 
 type Order struct {
-	ID      uuid.UUID `gorm:"type:uuid;primaryKey;unique"`
-	OrderID int32     `gorm:"autoIncrement"`
-	Status  OrderStatus
-	UserID  uuid.UUID `gorm:"index"`
-	Product Product
+	ID       uuid.UUID `gorm:"type:uuid;primaryKey;unique"`
+	OrderID  int32     `gorm:"autoIncrement"`
+	Status   OrderStatus
+	UserID   uuid.UUID `gorm:"index"`
+	Products []Product `gorm:"many2many:order_products"`
 	gorm.Model
 }
 
