@@ -9,19 +9,23 @@ type Product struct {
 	ID             uuid.UUID `gorm:"type:uuid;primaryKey;unique"`
 	Name           string    `gorm:"size:256"`
 	AvailableCount int
-	IsAvailable    bool      `gorm:"index"`
-	OrderID        uuid.UUID `gorm:"index"`
+	IsAvailable    bool `gorm:"index"`
 	gorm.Model
 }
 
-func NewProduct(name string, count int, orderID uuid.UUID) *Product {
+func NewProduct(name string, count int) *Product {
 	return &Product{
 		ID:             uuid.New(),
 		Name:           name,
 		AvailableCount: count,
 		IsAvailable:    true,
-		OrderID:        orderID,
 	}
+}
+
+func (p *Product) Update(name string, availableCount int, isAvailable bool) {
+	p.ChangeName(name)
+	p.ChangeAvailableCount(availableCount)
+	p.ChangeAvailability(isAvailable)
 }
 
 func (p *Product) ChangeName(name string) {
