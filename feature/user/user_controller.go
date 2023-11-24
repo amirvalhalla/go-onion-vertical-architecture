@@ -1,9 +1,10 @@
 package user
 
 import (
+	"net/http"
+
 	"github.com/amirvalhalla/go-onion-vertical-architecture/feature/user/dto"
 	mapper "github.com/amirvalhalla/go-onion-vertical-architecture/feature/user/mapper"
-	"net/http"
 
 	"github.com/amirvalhalla/go-onion-vertical-architecture/exception"
 	"github.com/amirvalhalla/go-onion-vertical-architecture/infrastructure/base"

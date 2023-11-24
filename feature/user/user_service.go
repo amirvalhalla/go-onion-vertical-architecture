@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+
 	user2 "github.com/amirvalhalla/go-onion-vertical-architecture/feature/user/dto"
 
 	"github.com/amirvalhalla/go-onion-vertical-architecture/domain"
