@@ -37,7 +37,7 @@ func (c *controller) Get(ctx *gin.Context) {
 	statusCode := http.StatusOK
 	var id uuid.UUID
 
-	if err := govrHTTP.BaseResponseShouldBindParamToUUID("id", &id, ctx); err != nil {
+	if err := govrHTTP.BaseResponseShouldBindParamToUUID("userId", &id, ctx); err != nil {
 		errs = append(errs, err.Error())
 	}
 
@@ -157,7 +157,7 @@ func (c *controller) Delete(ctx *gin.Context) {
 	statusCode := http.StatusOK
 	var id uuid.UUID
 
-	if err := govrHTTP.BaseResponseShouldBindParamToUUID("coinId", &id, ctx); err != nil {
+	if err := govrHTTP.BaseResponseShouldBindParamToUUID("userId", &id, ctx); err != nil {
 		errs = append(errs, err.Error())
 	}
 
