@@ -1,11 +1,11 @@
 package query
 
 import (
-	"github.com/google/uuid"
 	"strings"
 
 	"github.com/amirvalhalla/go-onion-vertical-architecture/infrastructure/repository/sql"
 	"github.com/amirvalhalla/go-onion-vertical-architecture/infrastructure/util"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 

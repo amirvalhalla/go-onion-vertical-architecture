@@ -1,8 +1,11 @@
 package order
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/amirvalhalla/go-onion-vertical-architecture/exception"
-	order "github.com/amirvalhalla/go-onion-vertical-architecture/feature/order/dto"
+	dto "github.com/amirvalhalla/go-onion-vertical-architecture/feature/order/dto"
 	mapper "github.com/amirvalhalla/go-onion-vertical-architecture/feature/order/mapper"
 	product "github.com/amirvalhalla/go-onion-vertical-architecture/feature/product/dto"
 	"github.com/amirvalhalla/go-onion-vertical-architecture/infrastructure/base"
@@ -10,8 +13,6 @@ import (
 	"github.com/amirvalhalla/go-onion-vertical-architecture/infrastructure/repository/sql"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"net/http"
-	"strconv"
 )
 
 type Controller interface {
@@ -59,7 +60,7 @@ func (c *controller) Get(ctx *gin.Context) {
 
 	ctx.JSON(
 		statusCode,
-		base.NewResponse[order.GetDto](mapper.ToGetDto(orderEntity), statusCode, nil),
+		base.NewResponse[dto.GetDto](mapper.ToGetDto(orderEntity), statusCode, nil),
 	)
 }
 
@@ -107,16 +108,16 @@ func (c *controller) GetAll(ctx *gin.Context) {
 
 	ctx.JSON(
 		statusCode,
-		base.NewPaginationResponse[[]order.GetDto](mapper.ToGetDtos(orderEntities),
+		base.NewPaginationResponse[[]dto.GetDto](mapper.ToGetDtos(orderEntities),
 			pageIndex, pageSize, totalRecords, statusCode, nil),
 	)
 }
 
 func (c *controller) Create(ctx *gin.Context) {
-	var createDto order.CreateDto
+	var createDto dto.CreateDto
 	statusCode := http.StatusCreated
 
-	if err := govrHTTP.BaseResponseShouldBindJSON[order.CreateDto](&createDto, ctx); err != nil {
+	if err := govrHTTP.BaseResponseShouldBindJSON[dto.CreateDto](&createDto, ctx); err != nil {
 		return
 	}
 
@@ -131,15 +132,15 @@ func (c *controller) Create(ctx *gin.Context) {
 
 	ctx.JSON(
 		statusCode,
-		base.NewResponse[order.GetDto](mapper.ToGetDto(productEntity), statusCode, nil),
+		base.NewResponse[dto.GetDto](mapper.ToGetDto(productEntity), statusCode, nil),
 	)
 }
 
 func (c *controller) Update(ctx *gin.Context) {
-	var updateDto order.UpdateDto
+	var updateDto dto.UpdateDto
 	statusCode := http.StatusOK
 
-	if err := govrHTTP.BaseResponseShouldBindJSON[order.UpdateDto](&updateDto, ctx); err != nil {
+	if err := govrHTTP.BaseResponseShouldBindJSON[dto.UpdateDto](&updateDto, ctx); err != nil {
 		return
 	}
 
@@ -154,7 +155,7 @@ func (c *controller) Update(ctx *gin.Context) {
 
 	ctx.JSON(
 		statusCode,
-		base.NewResponse[order.GetDto](mapper.ToGetDto(productEntity), statusCode, nil),
+		base.NewResponse[dto.GetDto](mapper.ToGetDto(productEntity), statusCode, nil),
 	)
 }
 
