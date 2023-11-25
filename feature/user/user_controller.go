@@ -3,10 +3,9 @@ package user
 import (
 	"net/http"
 
-	"github.com/amirvalhalla/go-onion-vertical-architecture/feature/user/dto"
-	mapper "github.com/amirvalhalla/go-onion-vertical-architecture/feature/user/mapper"
-
 	"github.com/amirvalhalla/go-onion-vertical-architecture/exception"
+	dto "github.com/amirvalhalla/go-onion-vertical-architecture/feature/user/dto"
+	mapper "github.com/amirvalhalla/go-onion-vertical-architecture/feature/user/mapper"
 	"github.com/amirvalhalla/go-onion-vertical-architecture/infrastructure/base"
 	govrHTTP "github.com/amirvalhalla/go-onion-vertical-architecture/infrastructure/http"
 	"github.com/amirvalhalla/go-onion-vertical-architecture/infrastructure/repository/sql"
@@ -43,7 +42,7 @@ func (c *controller) Get(ctx *gin.Context) {
 
 	if len(errs) > 0 {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest,
-			base.NewResponse[user.GetDto](nil, http.StatusBadRequest, errs),
+			base.NewResponse[dto.GetDto](nil, http.StatusBadRequest, errs),
 		)
 		return
 	}
@@ -52,14 +51,14 @@ func (c *controller) Get(ctx *gin.Context) {
 	if err != nil {
 		statusCode = exception.DefaultOrHandleSHTTPStatusCode(err)
 		ctx.AbortWithStatusJSON(statusCode,
-			base.NewResponse[user.GetDto](nil, statusCode, []string{err.Error()}),
+			base.NewResponse[dto.GetDto](nil, statusCode, []string{err.Error()}),
 		)
 		return
 	}
 
 	ctx.JSON(
 		statusCode,
-		base.NewResponse[user.GetDto](mapper.ToGetDto(userEntity), statusCode, nil),
+		base.NewResponse[dto.GetDto](mapper.ToGetDto(userEntity), statusCode, nil),
 	)
 }
 
@@ -84,7 +83,7 @@ func (c *controller) GetAll(ctx *gin.Context) {
 
 	if len(errs) > 0 {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest,
-			base.NewPaginationResponse[[]user.GetDto](nil, 0, 0, 0,
+			base.NewPaginationResponse[[]dto.GetDto](nil, 0, 0, 0,
 				http.StatusBadRequest, errs),
 		)
 		return
@@ -94,23 +93,23 @@ func (c *controller) GetAll(ctx *gin.Context) {
 	if err != nil {
 		statusCode = exception.DefaultOrHandleSHTTPStatusCode(err)
 		ctx.AbortWithStatusJSON(statusCode,
-			base.NewResponse[user.GetDto](nil, statusCode, []string{err.Error()}),
+			base.NewResponse[dto.GetDto](nil, statusCode, []string{err.Error()}),
 		)
 		return
 	}
 
 	ctx.JSON(
 		statusCode,
-		base.NewPaginationResponse[[]user.GetDto](mapper.ToGetDtos(userEntities),
+		base.NewPaginationResponse[[]dto.GetDto](mapper.ToGetDtos(userEntities),
 			pageIndex, pageSize, totalRecords, statusCode, nil),
 	)
 }
 
 func (c *controller) Create(ctx *gin.Context) {
-	var createDto user.CreateDto
+	var createDto dto.CreateDto
 	statusCode := http.StatusCreated
 
-	if err := govrHTTP.BaseResponseShouldBindJSON[user.CreateDto](&createDto, ctx); err != nil {
+	if err := govrHTTP.BaseResponseShouldBindJSON[dto.CreateDto](&createDto, ctx); err != nil {
 		return
 	}
 
@@ -118,22 +117,22 @@ func (c *controller) Create(ctx *gin.Context) {
 	if err != nil {
 		statusCode = exception.DefaultOrHandleSHTTPStatusCode(err)
 		ctx.AbortWithStatusJSON(statusCode,
-			base.NewResponse[user.GetDto](nil, statusCode, []string{err.Error()}),
+			base.NewResponse[dto.GetDto](nil, statusCode, []string{err.Error()}),
 		)
 		return
 	}
 
 	ctx.JSON(
 		statusCode,
-		base.NewResponse[user.GetDto](mapper.ToGetDto(userEntity), statusCode, nil),
+		base.NewResponse[dto.GetDto](mapper.ToGetDto(userEntity), statusCode, nil),
 	)
 }
 
 func (c *controller) Update(ctx *gin.Context) {
-	var updateDto user.UpdateDto
+	var updateDto dto.UpdateDto
 	statusCode := http.StatusOK
 
-	if err := govrHTTP.BaseResponseShouldBindJSON[user.UpdateDto](&updateDto, ctx); err != nil {
+	if err := govrHTTP.BaseResponseShouldBindJSON[dto.UpdateDto](&updateDto, ctx); err != nil {
 		return
 	}
 
@@ -141,14 +140,14 @@ func (c *controller) Update(ctx *gin.Context) {
 	if err != nil {
 		statusCode = exception.DefaultOrHandleSHTTPStatusCode(err)
 		ctx.AbortWithStatusJSON(statusCode,
-			base.NewResponse[user.GetDto](nil, statusCode, []string{err.Error()}),
+			base.NewResponse[dto.GetDto](nil, statusCode, []string{err.Error()}),
 		)
 		return
 	}
 
 	ctx.JSON(
 		statusCode,
-		base.NewResponse[user.GetDto](mapper.ToGetDto(userEntity), statusCode, nil),
+		base.NewResponse[dto.GetDto](mapper.ToGetDto(userEntity), statusCode, nil),
 	)
 }
 
@@ -163,7 +162,7 @@ func (c *controller) Delete(ctx *gin.Context) {
 
 	if len(errs) > 0 {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest,
-			base.NewPaginationResponse[[]user.GetDto](nil, 0, 0, 0,
+			base.NewPaginationResponse[[]dto.GetDto](nil, 0, 0, 0,
 				http.StatusBadRequest, errs),
 		)
 		return
@@ -173,7 +172,7 @@ func (c *controller) Delete(ctx *gin.Context) {
 	if err != nil {
 		statusCode = exception.DefaultOrHandleSHTTPStatusCode(err)
 		ctx.AbortWithStatusJSON(statusCode,
-			base.NewResponse[user.GetDto](nil, statusCode, []string{err.Error()}),
+			base.NewResponse[dto.GetDto](nil, statusCode, []string{err.Error()}),
 		)
 		return
 	}
