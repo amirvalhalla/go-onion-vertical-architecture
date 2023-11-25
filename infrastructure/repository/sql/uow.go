@@ -97,8 +97,8 @@ func (uow *unitOfWork) Do(ctx context.Context, isTransactional bool, fn UnitOfWo
 
 func (uow *unitOfWork) autoMigrate() error {
 	return uow.conn.AutoMigrate(
-		&domain.Product{},
-		&domain.Order{},
 		&domain.User{},
+		&domain.Order{},
+		&domain.Product{},
 	)
 }
