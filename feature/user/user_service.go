@@ -24,12 +24,12 @@ type service struct {
 }
 
 func NewService(uow sql.UnitOfWork) Service {
-	return service{
+	return &service{
 		uow: uow,
 	}
 }
 
-func (s service) Get(ctx context.Context, id uuid.UUID) (domain.User, error) {
+func (s *service) Get(ctx context.Context, id uuid.UUID) (domain.User, error) {
 	var userEntity domain.User
 	var err error
 
@@ -43,7 +43,7 @@ func (s service) Get(ctx context.Context, id uuid.UUID) (domain.User, error) {
 	return userEntity, err
 }
 
-func (s service) GetAll(ctx context.Context, pageIndex, pageSize int, search string) ([]domain.User, int64, error) {
+func (s *service) GetAll(ctx context.Context, pageIndex, pageSize int, search string) ([]domain.User, int64, error) {
 	var userEntities []domain.User
 	var totalRecords int64
 	var err error
@@ -65,7 +65,7 @@ func (s service) GetAll(ctx context.Context, pageIndex, pageSize int, search str
 	return userEntities, totalRecords, err
 }
 
-func (s service) Create(ctx context.Context, createDto user2.CreateDto) (domain.User, error) {
+func (s *service) Create(ctx context.Context, createDto user2.CreateDto) (domain.User, error) {
 	var err error
 	userEntity := domain.NewUser(createDto.FirstName, createDto.LastName)
 
@@ -80,7 +80,7 @@ func (s service) Create(ctx context.Context, createDto user2.CreateDto) (domain.
 	return *userEntity, err
 }
 
-func (s service) Update(ctx context.Context, updateDto user2.UpdateDto) (domain.User, error) {
+func (s *service) Update(ctx context.Context, updateDto user2.UpdateDto) (domain.User, error) {
 	var userEntity domain.User
 	updatedUserEntity := new(domain.User)
 	var err error
@@ -102,7 +102,7 @@ func (s service) Update(ctx context.Context, updateDto user2.UpdateDto) (domain.
 	return *updatedUserEntity, err
 }
 
-func (s service) Delete(ctx context.Context, id uuid.UUID) error {
+func (s *service) Delete(ctx context.Context, id uuid.UUID) error {
 	var userEntity domain.User
 	var err error
 

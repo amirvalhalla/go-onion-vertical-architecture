@@ -24,11 +24,12 @@ type Order struct {
 	gorm.Model
 }
 
-func NewOrder(userID uuid.UUID) *Order {
+func NewOrder(userID uuid.UUID, products []Product) *Order {
 	return &Order{
-		ID:     uuid.New(),
-		Status: OrderPending,
-		UserID: userID,
+		ID:       uuid.New(),
+		Status:   OrderPending,
+		UserID:   userID,
+		Products: products,
 	}
 }
 
