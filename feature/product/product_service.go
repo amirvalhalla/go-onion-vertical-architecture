@@ -12,6 +12,7 @@ import (
 
 type Service interface {
 	Get(ctx context.Context, id uuid.UUID) (domain.Product, error)
+	GetProductsByID(ctx context.Context, productIds []uuid.UUID) ([]domain.Product, error)
 	GetAll(ctx context.Context, pageIndex, pageSize int, search string) ([]domain.Product, int64, error)
 	Create(ctx context.Context, createDto dto.CreateDto) (domain.Product, error)
 	Update(ctx context.Context, updateDto dto.UpdateDto) (domain.Product, error)
@@ -23,12 +24,12 @@ type service struct {
 }
 
 func NewService(uow sql.UnitOfWork) Service {
-	return service{
+	return &service{
 		uow: uow,
 	}
 }
 
-func (s service) Get(ctx context.Context, id uuid.UUID) (domain.Product, error) {
+func (s *service) Get(ctx context.Context, id uuid.UUID) (domain.Product, error) {
 	var productEntity domain.Product
 	var err error
 
@@ -42,7 +43,7 @@ func (s service) Get(ctx context.Context, id uuid.UUID) (domain.Product, error) 
 	return productEntity, err
 }
 
-func (s service) GetAll(ctx context.Context, pageIndex, pageSize int, search string) ([]domain.Product, int64, error) {
+func (s *service) GetAll(ctx context.Context, pageIndex, pageSize int, search string) ([]domain.Product, int64, error) {
 	var productEntities []domain.Product
 	var totalRecords int64
 	var err error
@@ -64,7 +65,25 @@ func (s service) GetAll(ctx context.Context, pageIndex, pageSize int, search str
 	return productEntities, totalRecords, err
 }
 
-func (s service) Create(ctx context.Context, createDto dto.CreateDto) (domain.Product, error) {
+func (s *service) GetProductsByID(ctx context.Context, productIds []uuid.UUID) ([]domain.Product, error) {
+	var productEntities []domain.Product
+	var err error
+
+	err = s.uow.Do(ctx, false, func(uows sql.UnitOfWorkStore) error {
+		if productEntities, err = uows.ProductRepository().FindAll(
+			query.FindProductsWithIDs(productIds),
+			query.WithOrderBy("created_at", query.DESC),
+		); err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return productEntities, err
+}
+
+func (s *service) Create(ctx context.Context, createDto dto.CreateDto) (domain.Product, error) {
 	var err error
 	productEntity := domain.NewProduct(createDto.Name, createDto.AvailableCount)
 
@@ -79,7 +98,7 @@ func (s service) Create(ctx context.Context, createDto dto.CreateDto) (domain.Pr
 	return *productEntity, err
 }
 
-func (s service) Update(ctx context.Context, updateDto dto.UpdateDto) (domain.Product, error) {
+func (s *service) Update(ctx context.Context, updateDto dto.UpdateDto) (domain.Product, error) {
 	var productEntity domain.Product
 	updatedProductEntity := new(domain.Product)
 	var err error
@@ -101,7 +120,7 @@ func (s service) Update(ctx context.Context, updateDto dto.UpdateDto) (domain.Pr
 	return *updatedProductEntity, err
 }
 
-func (s service) Delete(ctx context.Context, id uuid.UUID) error {
+func (s *service) Delete(ctx context.Context, id uuid.UUID) error {
 	var productEntity domain.Product
 	var err error
 

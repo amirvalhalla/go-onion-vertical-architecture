@@ -12,7 +12,7 @@ import (
 
 type Service interface {
 	Get(ctx context.Context, id uuid.UUID) (domain.Order, error)
-	GetAll(ctx context.Context, pageIndex, pageSize int, search string) ([]domain.Order, int64, error)
+	GetAll(ctx context.Context, pageIndex, pageSize int, search int) ([]domain.Order, int64, error)
 	Create(ctx context.Context, createDto dto.CreateDto) (domain.Order, error)
 	Update(ctx context.Context, updateDto dto.UpdateDto) (domain.Order, error)
 	Delete(ctx context.Context, id uuid.UUID) error
@@ -24,13 +24,13 @@ type service struct {
 }
 
 func NewService(uow sql.UnitOfWork) Service {
-	return service{
+	return &service{
 		uow:            uow,
 		productService: product.NewService(uow),
 	}
 }
 
-func (s service) Get(ctx context.Context, id uuid.UUID) (domain.Order, error) {
+func (s *service) Get(ctx context.Context, id uuid.UUID) (domain.Order, error) {
 	var orderEntity domain.Order
 	var err error
 
@@ -44,7 +44,7 @@ func (s service) Get(ctx context.Context, id uuid.UUID) (domain.Order, error) {
 	return orderEntity, err
 }
 
-func (s service) GetAll(ctx context.Context, pageIndex, pageSize int, search int) ([]domain.Order, int64, error) {
+func (s *service) GetAll(ctx context.Context, pageIndex, pageSize int, search int) ([]domain.Order, int64, error) {
 	var orderEntities []domain.Order
 	var totalRecords int64
 	var err error
@@ -66,12 +66,15 @@ func (s service) GetAll(ctx context.Context, pageIndex, pageSize int, search int
 	return orderEntities, totalRecords, err
 }
 
-func (s service) Create(ctx context.Context, createDto dto.CreateDto) (domain.Order, error) {
+func (s *service) Create(ctx context.Context, createDto dto.CreateDto) (domain.Order, error) {
 	var err error
 
-	//TODO should find products
+	products, err := s.productService.GetProductsByID(ctx, createDto.ProductIDs)
+	if err != nil {
+		return domain.Order{}, err
+	}
 
-	orderEntity := domain.NewOrder(createDto.UserID, createDto.ProductIDs)
+	orderEntity := domain.NewOrder(createDto.UserID, products)
 
 	err = s.uow.Do(ctx, true, func(uows sql.UnitOfWorkStore) error {
 		if orderEntity, err = uows.OrderRepository().Insert(orderEntity); err != nil {
@@ -84,7 +87,7 @@ func (s service) Create(ctx context.Context, createDto dto.CreateDto) (domain.Or
 	return *orderEntity, err
 }
 
-func (s service) Update(ctx context.Context, updateDto dto.UpdateDto) (domain.Order, error) {
+func (s *service) Update(ctx context.Context, updateDto dto.UpdateDto) (domain.Order, error) {
 	var orderEntity domain.Order
 	updatedOrderEntity := new(domain.Order)
 	var err error
@@ -106,7 +109,7 @@ func (s service) Update(ctx context.Context, updateDto dto.UpdateDto) (domain.Or
 	return *updatedOrderEntity, err
 }
 
-func (s service) Delete(ctx context.Context, id uuid.UUID) error {
+func (s *service) Delete(ctx context.Context, id uuid.UUID) error {
 	var orderEntity domain.Order
 	var err error
 
